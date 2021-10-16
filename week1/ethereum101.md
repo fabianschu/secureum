@@ -106,19 +106,28 @@
 
 33. A transaction is a serialized binary message that contains the following components (See [here](https://github.com/ethereumbook/ethereumbook/blob/develop/06transactions.asciidoc)):
 
-    nonce: A sequence number, issued by the originating EOA, used to prevent message replay
+    **nonce**: A sequence number, issued by the originating EOA, used to prevent message replay. Serves two crucial purposes:
 
-    gasPrice: The amount of ether (in wei) that the originator is willing to pay for each unit of gas
+    - the usability feature of transactions being included in the order of creation
+    - and the vital feature of transaction duplication protection
 
-    gasLimit: The maximum amount of gas the originator is willing to pay for this transaction
+    **gasPrice**: The amount of ether (in wei) that the originator is willing to pay for each unit of gas
 
-    recipient: The destination Ethereum address
+    **gasLimit**: The maximum amount of gas the originator is willing to pay for this transaction
 
-    value: The amount of ether (in wei) to send to the destination
+    **recipient**: The destination Ethereum address
 
-    data: The variable-length binary data payload
+    **value**: The amount of ether (in wei) to send to the destination. A transaction with only value is a _payment_.
 
-    v,r,s: The three components of an ECDSA digital signature of the originating EOA
+    - recipient is _EOA_: Ethereum will record a state change, adding the value you sent to the balance of the address
+    - recipient is _contract_: the EVM will execute the contract and will attempt to call the function named in the data payload of your transaction.
+      - If there is no data in your transaction, the EVM will call a fallback function and, if that function is payable, will execute it to determine what to do next.
+      - If there is no code in fallback function, then the effect of the transaction will be to increase the balance of the contract, exactly like a payment to a wallet.
+      - If there is no fallback function or non-payable fallback function, then transaction will be reverted.
+
+    **data**: The variable-length binary data payload. A transaction with only data is an _invocation_.
+
+    **v,r,s**: The three components of an ECDSA digital signature of the originating EOA
 
 34. Nonce: A scalar value equal to the number of transactions sent from the EOA account or, in the case of Contract accounts, it is the number of contract-creations made by the account. (See [here]())
 
