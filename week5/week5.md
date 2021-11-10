@@ -57,7 +57,9 @@
 - token implementers can **cancel** an address and **move its tokens to a new address**
 - tokens can only be sent to **whitelisted addresses** => token transfer risk
 
-## 128 - 135 Guarded Launch Concepts (read medium article!)
+## Non-code related safety aspects
+
+### 128 - 135 Guarded Launch Concepts (read medium article!)
 
 - **asset limits:** limit the total asset value managed by a system initially upon launch and gradually increasing it
 - **asset types:** limit the number of asset types that can be used in protocol initially and gradually expanding to other assets
@@ -68,3 +70,22 @@
 - **insurance ratios:** limit the total assets and liabilities held by a system as a ratio of a built-in insurance fund
 - **circuit breakers:** implement automatic mechanisms to pause a system in extreme scenarios
 - **emergency shutdown** implement facilities that allow governance to shutdown new activity in the system and allow users to reclaim assets
+
+### 136 - 137 System transparency
+
+- [ ] **system specification**: describes how and why the different system components behave to achieve the design requirements => **without:** system implementation cannot be evaluated against the requirements for correctness
+- [ ] **system documentation**: describes what (and how) the implementation of different components of the system does to achieve the specification goals (roles, functionalities, interactions of the entire system) => **without:** system implementation cannot be evaluated against the specification for correctness and one will have to rely on analyzing the implementation itself
+
+## Coding Best Practices
+
+### 138 - 146 Functions
+
+- **input validation:** for all function parameters, especially if visibility is external/public
+- **function arguments:** double-check that function calls at caller site use correct arguments and in right order
+- **function visibility:** ensure strictest visibility is used for the required functionality
+- **function modifiers:** ensure the right set of modifiers are used (in correct order) so that expected access control or validation flow is enforced
+- **function return values:** ensure appropriate return values are returned from frunctions and checked at function call sites (to catch error conditions)
+- **function invocation timeliness:** externally accessible functions may be called at any time or never => don't assume they will only be called at a specific time (e.g. initialization fns)
+- **function invocation repetitiveness:** eternally accessible functions may be called any number of times => it's unsafe to assume they will be called only once/specific number of times
+- **function invocation order:** externally accessible functions may be called in any order => unsafe to assume specific order
+- **function invocation arguments:** externally accessible functions may be called with any possible arguments
