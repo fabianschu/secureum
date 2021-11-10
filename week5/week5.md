@@ -56,3 +56,15 @@
 
 - token implementers can **cancel** an address and **move its tokens to a new address**
 - tokens can only be sent to **whitelisted addresses** => token transfer risk
+
+## 128 - 135 Guarded Launch Concepts (read medium article!)
+
+- **asset limits:** limit the total asset value managed by a system initially upon launch and gradually increasing it
+- **asset types:** limit the number of asset types that can be used in protocol initially and gradually expanding to other assets
+- **user limits:** limit the total number of users that can interact with a system (e.g. whitelisted)
+- **usage limits:** enforce transaction size limits, daily volume limits, per-account limits, or rate-limiting transactions
+- **composability limits:** restrict the ability for a contract to be used in a composite atomic transaction by introducing time locks around core operations
+- **escrows:** escrow high value transactions with time locks and a governance capability to nullify or revert transactions
+- **insurance ratios:** limit the total assets and liabilities held by a system as a ratio of a built-in insurance fund
+- **circuit breakers:** implement automatic mechanisms to pause a system in extreme scenarios
+- **emergency shutdown** implement facilities that allow governance to shutdown new activity in the system and allow users to reclaim assets
