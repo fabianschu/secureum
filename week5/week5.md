@@ -89,3 +89,90 @@
 - **function invocation repetitiveness:** eternally accessible functions may be called any number of times => it's unsafe to assume they will be called only once/specific number of times
 - **function invocation order:** externally accessible functions may be called in any order => unsafe to assume specific order
 - **function invocation arguments:** externally accessible functions may be called with any possible arguments
+
+### 147 - 153 Access Control
+
+- **specification:** system actors, their access control privileges and trust assumptions are specified so that they are correctly implemented & enforced
+- **implementation:** specifiec access control is implemented uniformly across all the subjects seeking access and objects being accessed
+
+**Conditionals:** double-check that correct variables are being checked and correct operators are used
+
+**Modifiers:**
+
+- **missing modifiers?** access control is typically enforced using modifiers => modifiers are present on all relevant functions?
+- **incorrectly implemented modifiers?** ensure the expected checks on the correct roles/addresses w/ right composition (e.g. || instead of &&)
+- **incorrectly used modifiers?** correct modifiers are used on functions requiring specific access control?
+
+**access control changes:** changes to access control (e.g. ownership) should be handled with extra security (e.b. two-step)
+
+### 154 - 157 Comments & dead code & code quality
+
+- **comments:** NatSpec and inline comments
+- **tests:** indicate that system implementation has been validated against the specification (unit, fucntional, integration) <> good test coverage?
+- **unused constructs:** unused imports, inherited functions, parameters, variables, modifiers, events or return values => remove
+- **redundant constructs:** redundant code and comments => remove
+
+### 158 - 159 Handling value
+
+**ETH handling**
+
+- contracts that accept/manage/transfer ETH should ensure that functions handling ETH are using _msg.value_ appropriately
+- logic that depends on ETH value accounts for **less/more** ETH sent
+- logic that depends on contract ETH balance accounts for different direct/indirect ways of receiving ETH (coinbase/selfdestruct)
+- transfers are reentrancy safe
+- extra check for access control, input validation & error handling
+
+**Token handling**
+
+- functions handling tokens account for different types of ERC20 tokens (ERC20 vs ERC777), deflationary/inflationary tokens, rebasing tokens and trusted/external tokens
+- extra check for access control, input validation & error handling
+
+### 160 - 163 Trust & trusted actors
+
+- ideally: **no trusted actors**
+- exception: **guarded launch** scenarios => start with trusted actors and **progressively decentralize** towards automated governance
+- for trusted phase: trusted actors, their roles and capabilities should be clearly specified, implemented accordingly and documented
+- **priviliged roles** should be controlled by **multisigs** (EOA = single point of failure)
+- **two-step change of privileged roles:** 1. propose new address, 2. new address claims privileged role
+- **time-delayed change of critical parameters:** 1. broadcast param change via event emission, 2. execute param change after time-delay => opportunity for users to exit or adjust engagement
+
+### 164 - 191 Common Security issues
+
+- **explicit input:** and assumption **validation** & documentation
+- **configuration issues**: misconfiguration of system components such contracts, parameters, addresses and permissions may lead to security issues
+- **initialization issues:** lack of initialization, initialization with incorrect values or allowing untrusted actors to initialize system params => security issues
+- **cleanup issues:** forgetting to clean up old state or cleaning up incorrectly/insufficiently => securtiy issues
+- **data processing issues:** processing data incorrectly => unexpected behavior => security issues
+- **data validation issues** missing validation/insufficiently validating data => untrustworthy system behavior => security issues
+- **numerical issues:** incorrect numerical computation => security issues
+- **accounting issues:** insufficient tracking or accounting of business logic related aspects such as states, phases, permissions, roles, funds, tokens => security issues
+- **access control issues:** incorrect access control related to system actors, roles, assets, permissions => security issues
+- **auditing/logging issues:** incorrect/insufficient emission of events => impacts off-chain monitoring & incident response capabilities
+- **cryptography issues:** incorrect/insufficient cryptography especially related to on-chain signature verification or off-chain key management
+- **error reporting issues:** incorrect/insufficient detecting, reporting & handling of error
+- **Denial-of-Service (DoS) issues:** if other users can access system services by modifying system parameters they might cause DoS services which affects the availability of the system => funds might get locked
+- **timing issues:** incorrect assumtions on timing of user actions, state transitions or blockchain state/blocks/transactions may lead to security issues
+- **ordering issues:** incorrect assumtions on ordering of user actions or system state transitions => e.g. user may accidentally call finalization fn before initialization fn
+- **undefined behavior issues:** interacting w/ external components (e.g. oracles, tokens, contracts) forces system to trust or make assumptions about their correctness requiring validation of their existence and outputs without which may lead to security issues
+- **trust issues:** incorrect/insufficient trust assumption about/among system acotrs & external entities => privilege escalation/abuse => security issues
+- **gas issues** incorrect assumptions about gas requirements especially for loops or external calls will lead to out-of-gas exceptions => security issues (failed transfers or locked funds)
+- **dependency issues:** dependency on external actors or software => trust/availability/correctness assumptions => when broken security issues
+- **constant issues:** incorrect assumptions about system actors, entities, parameters being constant may lead to security issues if factors change unexpectedly
+- **freshness issues:** incorrect assumptions about incentives of system/external actors to perform or not perform certain actions, e.g. incentive to liquidate positions, lack of incentive to DoS or gries system
+- **clarity issues:** lack of clarity in system specification, documentation, implementation or UX/UI => incorrect expectations => security issues
+- **privacy issues:** data and tx's are not private and anyone can observe contract state and track tx's => incorrect assumptions about privacy aspects can be abused which may lead to security issues
+- **cloning issues:** copy/pasting code from other libraries, contracts or even different parts of the same contract may result in íncorrect code semantics for the context being copied to, copy over any vulnerabilites or miss any security fixes applied to the original code
+- **business logic issues:** incorrect/insufficient assumptions about higher-order business logic being implemented in the application => differences in expected and actual behavior => security issues
+
+### 192 - 200 Saltzer and Schroeder's Secure Design Principles
+
+- [ ] **principle of least privilege:** ensure that various system actors have the least amount of privilege granted as required by their roles to execute their specific tasks
+- [ ] **principle of separation of privilege:** ensure that critical privileges are separated across multiple actors so that there are no single points of failure/abuse => e.g. multisigs
+- [ ] **principle of least common mechanism:** ensure that only the least number of security-critical modules/paths as required are shared amongst the different actora/code
+- [ ] **principle of fail-safe defaults:** ensure that variables or permissions are intialized to fail-safe default values which can be made more inclusive later instead of opening upp the system to everyone including untrusted actors
+- [ ] **principle of complete mediation:** ensure that any required access control is enforced along all access paths to the object or function being protected
+- [ ] **principle of economy of mechanism:** ensure that contracts and functions are not overly complex or large so as to reduce readability or maintainability
+- [ ] **principle of open design:** security should be derived from the strength of the design and implementation under the assumption that attackers will study their details and try to exploit them in arbitrary ways (use open source code!)
+- [ ] **principle of psychological acceptability:** ensure that security aspects of smart contract interfaces and system designs/flows are user-friendly and intuitive so that users can interact w/ minimal risk
+- [ ] **principle of work factor:** given the magnitude of value managed by smart contracts, it is safe to assume that byzantine attackers will risk the greates amounts of intellectual/financial/social capital possible to subvert such systems => mitigation mechanisms must factor in the highest levels of risk
+- [ ] **principle of compromise recording:** ensure that smart contracts and their accompanying operational infrastructure can be monitored at all times for minimizing loss from any compromise due to vulnerabilities/exploits (events!)
