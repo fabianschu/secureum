@@ -5,9 +5,9 @@
 ### 102 - 105 **ERC20** Conformity Checks
 
 - [ ] **`Transfer` and `transferFrom` return a boolean**. Several tokens do not return a boolean on these functions. As a result, **their calls in the contract might fail**.
-- [ ] The `name`, `decimals`, and `symbol` functions are present if used. These **functions are optional** in the ERC20 standard and might not be present.
-- [ ] `Decimals` **returns** a `uint8`. Several tokens **incorrectly return a uint256**. If this is the case, **ensure the value returned is below 255**.
-- [ ] The token mitigates the known **ERC20 race condition**. The ERC20 standard has a known ERC20 race condition that must be mitigated to prevent attackers from stealing tokens.
+- [ ] The `name`, `decimals`, and `symbol` functions are present if used. These **functions are optional** in the ERC20 standard and might not be present.
+- [ ] `Decimals` **returns** a `uint8`. Several tokens **incorrectly return a uint256**. If this is the case, **ensure the value returned is below 255**.
+- [ ] The token mitigates the known **ERC20 race condition**. The ERC20 standard has a known ERC20 race condition that must be mitigated to prevent attackers from stealing tokens.
   - `approve` is just to adjust an already approved amount => attacker can front run second approval and transfer twice
 
 ### 106 - 108 **ERC20** Extension Risks
