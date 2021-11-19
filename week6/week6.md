@@ -248,3 +248,92 @@ Possible approaches:
 
 - in reality smart contracts have different permissions/roles for different actors
 - general classification is that of users and admins
+- special role for guarded launch
+
+### 2. Asset Flow
+
+- **Who?** withdraw/deposit only by authorized/specified addresses
+- **When?** withdraw/deposit only in specified time window or under specified conditions
+- **Which?** only assets specified should be withdrawn/deposited
+- **Why?** withdraw/deposit only for specified reasons
+- **Where?** withdraw/deposit only to specified addresses
+- **What type?** withdraw/deposit only of assets of specified types ??
+- **How much** only in specified amounts
+
+### 3. Evaluating control flow
+
+**Control Flow:** analyzes transfer of control, i.e. execution order, across and within smart contracts
+
+- **interprocedural** (procedure = function) control flow typically indicated by a call graph which shows which functions (callers) call which other functions (callees), across or within smart contracts
+- **intraprodecural** ()within function didacted by conditionals (ifg/else), loops and return statements
+- both intra and interprocedural control flow analysis help track the flow of execution and data in smart contracts
+
+### 4. Data flow
+
+**Data flow:** transfer of data across and within smart contracts
+
+- interprocedural data flow is evaluated by analyzing data (variables/constants) used as argument values for fn parameters at call sites
+- intraprocedural data flow => assignment and use of (state/memory/calldata) variables/constants
+- help track the flow of global/local storage/memory changes in smart contracts
+
+### 5. Inferring constraints
+
+**Application level constraints:** rules that are implicit to the business logic implemented and may not be explicitly described in the specification
+
+- one approach: _what is being done on most program paths related to a particular logic? which paths deviate? is it justified?_
+- other approach: _symbolic checker_ which generates counter-examples or witnesses along execution paths where such constraints don't hold
+
+### 6. Understanding dependencies
+
+Exist when correct compilation/functioning or program code relies on code/data from _other smart contracts_ that were _not necessarily developed by project_ team.
+
+- **explicit dependencies:** import statements, inheritance heirarchy (e.g OpenZeppelin)
+- **composability:** composability => emergent/implicit dependencies for example via oracles
+- especially: DeFi protocols that rely on other related protocols for stablecoins, yield generation, borrowing/lending derivatives, oracles etc.
+
+### 7. Evaluating assumptions
+
+Common faulty assumptions:
+
+1. only _admin_ can call this fn
+2. _initialization_ fn will only be called once by contract deployer
+3. fns will always be called in certain _order_
+4. _params_ can only have non-zero values or values within certain threshold
+5. certain addresses/data values can _never be attacker controlled_
+6. fn calls will always be succcessful and so checking for _return values_ is not required
+
+### 8. Security Checklists
+
+noice
+
+## Evaluation
+
+## Proof-of-concept exploits
+
+- presenting PoC of exploits either in code or written descriptions make audit findings more realistic
+- descriptive exploit scenarios should make realistic assumptions
+
+## Likelihood & Impact
+
+**Likelihood**
+
+- exploit can be triggered by few transactions (easily) => likelihood _high_
+- deep knowledge required => likelihood _medium_
+- even harder assumptions, miner collusion, chain forks => _low_
+
+**Impact**
+
+- loss of funds => _high_ impact
+- no funds affected but normal functioning of system is disrupted => _medium_
+- everything else: _low_
+
+## Summary
+
+Audits are
+
+- time
+- resource
+- expertise
+- bound effort where trained experts evaluate smart contracts
+- using automated and manual techniques
+- to find as many vulnerabilites as possible
