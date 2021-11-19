@@ -107,3 +107,144 @@ Documentation is description of what has been implemented based on the design an
 4. understanding the documentation before looking at the code helpsauditors save time in inferring the architecture of the project
 5. **mismatches between documentation and code** could indicate stale/poor documentation, software defects or security vulnerabilities
 6. auditors are expected to encourage project team to document thoroughly
+
+### Testing
+
+=> should expect high-level of testing & test coverage
+
+### Static analysis
+
+- analyzing programms without actually executing them <> testing
+- can be performed on Solidity code (=> **Mythril**) or EVM bytecode (=> **Slither**)
+- combination of control flow and data flow analysis
+
+### Fuzzing
+
+- automated software testing technique
+- provide invalid, unexpected, random data as inputs
+- program is monitored for exceptions such as crashes, failing built-in assertions, memory leaks
+- tools: **Echidna**, **Harvey**
+
+### Symbolic Checking
+
+- checking for program correctness by using **symbolic inputs to represent set of states** and transitions instead of enumerating individual states/transitions separately
+- does finite-state model of system meet given specification?
+
+### Formal Verification
+
+- proving/disproving correctness of intended algo's w/ respect to certain formal specification or property using formal methods of mathematics
+- effective at detecting complex bugs which are hard to detect manually or using simpler automated tools
+- requires specification of the program being verified and techniques to translate/compare the specification with the actual implementation
+- tools: **Certora's Prover**, **ChainSecurity's VerX**, **Runtime Verification's KEVM**
+
+### Manual analysis
+
+=> only way to infer and eval business logic and application-level constraints
+
+## Tools
+
+TODO
+
+## Audit Process (from 80)
+
+1. Read **specification/documentation** => requirements, design & architecture
+2. Run **fast automated tools** such as _linters / static analyzers_ to investigate common Solidity pitfalls or missing SC best-practices
+3. **Manual code analysis** to understand business logic & detect volnerabilities in it
+4. Run **slower but deeper automated tools**, such as _symbolic chckers, fuzzers or formal verification anylzers_
+5. **Discuss** the findings from above with other auditors to identify false positives or missing analyses
+6. **Convey status** to project team for clarifying questions on business logic or threat model
+7. **Iterate** the above for the duration of the audit leaving some time for report writing
+8. **Write report** summarizing the above with details on findings & recommendations
+9. **Deliver the report** to the project team and discuss findings, severity & potential fixes
+10. **Eval fixes** from the project team and verify that they indeed remove the vulnerabities identified in findings
+
+### 1. Read Specification/Documentation
+
+**Specification** => **Why?**
+
+- starts with the **project's technical & business goals** and describes how the project's **design & architecture** help achieve those goals
+- actual **implementation** of smart contracts = **functional manifestation** of goals, requirements, specification, design & architecture
+
+**Documentation** => **How?**
+
+- description of what has been implemented based on design/architectural requirements
+- typically: README, NatSpec, code comments
+
+### 2. Running static analyzers
+
+- Slither/MythX perform control-flow and data-flow analyses on the smart contracts in the context of their detectors which encode common security pitfalls & best-practices
+- findings => good starting point to detect common vulnerabilities based on well-known constraints of Solidity/EVM or Ethereum
+- false positives are possible and need to be verified manually
+
+### 3. Manual code review
+
+- automated analyzers do not understand application-level logic and their constraints
+- manual analysis is required to detect security relevant deviations in implementations vis-a-vis the specification or documentation
+- auditors may need to infer business logic and their implied constraints directly from the code of from discussions with project team
+
+### 4. Running deepear automated tools
+
+Tools:
+
+- fuzzers, e.g. **Echidna**
+- symbolic checkers, e.g. **Manticore**
+- tool suite, e.g. **MythX**
+- formal verification tools, e.g. **Scribble, Certora Prover**
+
+Reasoning:
+
+- require understanding of project's application logic => recommended to be used at least after an initial manual code review
+- analyzing the output requires significant expertise with the tools temselves, domain-specific language and sometimes even inner workings
+- evaluating false-positives is sometimes challenging with these tools but true positives they discover are significant and extreme corner cases missed even by the best manual analyses
+
+### 5. Brainstorming with other auditors
+
+- initially brainstorm to discuss project's goals, specification/documentation and implementation
+- firewall (independently) pursue assessments
+- finally come together to compile findings
+
+### 6. Discussion with project team
+
+- having open communication channel with project team is useful to clarify
+- findings may be shared with project team immediately on private repository
+- if audit spans multiple weeks it may be helpful to have weekly sync up call
+
+### 7. Report writing
+
+- final compilation of the entire assessment => presents all aspects: scope/coverage, timeline, team/effort, summaries, tools/techniques, findings, exploit scenarios, suggested fixes, short-/long-term recomms
+  - executive summary: overview w/ highlights/lowlights illustrating the number/types/severity of vulnerabilities found and an overall assessment fo risk
+  - may also include description of smart contracts, inferred actors, assets, roles, permissions, interactions, threat models, existing risk mitigation measures
+  - bulk of reports focuses on findings of audit
+  - may also address subjective aspects of code quality, readability/auditability and other software-engineering best practices
+
+### 8. Report delivery
+
+- shared online document accompanied with areadout where the auditors present the report highlights to teh project team for discussion and any debate on findings and their severity ratings
+- project team typically takes some time to review ther audit report and respond back with any counterpoints on findings, severities or suggested fixes
+- depending on agreement project team and audit firm migh release the audit report publicly (after fixes have been made)
+
+### 9. Evaluating fixes
+
+- should actually mitigate the risks reported by audit
+- findings may be contested as not being relevant by project
+- audti firms may evaluate the specific fixes applied and confirm/deny their risk mitigation
+
+## Manual Review Approaches
+
+Possible approaches:
+
+- start witha ccess control
+- start with asset flow
+- start with control flow
+- start with data flow
+- inferring constraints
+- understanding dependencies
+- evaluating assumptions
+- evaluating security checklists
+
+### 1. Starting with access control
+
+**Access Control:** Most fundamental security primitive: _who_ has authorized access to _what_
+
+- in reality smart contracts have different permissions/roles for different actors
+- general classification is that of users and admins
